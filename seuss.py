@@ -16,7 +16,7 @@ import sys
 # In[2]:
 
 
-filename = "drseuss_new.txt"
+filename = "data/combinedText.txt"
 raw_text = open(filename).read()
 
 
@@ -45,7 +45,7 @@ print ("Total Vocab: ", n_vocab)
 
 # In[9]:
 
-
+print("9 Initated")
 # prepare the dataset of input to output pairs encoded as integers
 seq_length = 100
 dataX = []
@@ -60,7 +60,7 @@ print ("Total Patterns: ", n_patterns)
 
 
 # In[10]:
-
+print('10 initiated')
 
 # reshape X to be [samples, time steps, features]
 X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
@@ -84,7 +84,7 @@ model.add(Dropout(0.2))
 model.add(Dense(y.shape[1], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
-
+print("model compiled")
 # In[12]:
 
 
@@ -96,7 +96,7 @@ callbacks_list = [checkpoint]
 
 # In[13]:
 
-
+print("nuke launching")
 model.fit(X, y, epochs=1000, batch_size=128, callbacks=callbacks_list, verbose=1)
 
 
