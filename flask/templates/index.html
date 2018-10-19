@@ -1,22 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Dr-Suees</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
+<meta name="viewport" content="width = 1050, user-scalable = no" />
 
+<script src="{{ url_for('static', filename='extras/jquery.min.1.7.js') }}"></script>
+<script src="{{ url_for('static', filename='extras/modernizr.2.5.3.min.js') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <script src="{{ url_for('static', filename='js/flipbook.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/flipbook.css') }}"> -->
 </head>
-
 <body>
-    <div>
-        <button id="click-me">Click Me!</button>
-        <input id="input-field" type="text">
-      </div>
+<div class='col-xs-4'></div>
+<div class="col-xs-4 flipbook-viewport">
+	<div class="container">
+		<div class="flipbook">
+			<div >Hello</div>
+			<div >this</div>
+      <div >is</div>
+      <div >a</div>
+      <div >test</div>
+		</div>
+	</div>
+</div>
+<div class='col-xs-4'></div>
+
+<script type="text/javascript">
+
+function loadApp() {
+
+	// Create the flipbook
+
+	$('.flipbook').turn({
+			// Width
+
+			width:922,
+			
+			// Height
+
+			height:600,
+
+			// Elevation
+
+			elevation: 50,
+			
+			// Enable gradients
+
+			gradients: true,
+			
+			// Auto center this flipbook
+
+			autoCenter: true
+
+	});
+}
+
+// Load the HTML4 version if there's not CSS transform
+
+yepnope({
+	test : Modernizr.csstransforms,
+	yep: ['{{ url_for('static', filename='lib/turn.js') }}'],
+	nope:['{{ url_for('static', filename='lib/turn.html4.min.js') }}'], 
+	both:['{{ url_for('static', filename='css/flipbook.css') }}'], 
+	complete: loadApp
+});
+
+</script>
 
 </body>
-<script src="index.js" type="text/javascript"></script>
-
 </html>

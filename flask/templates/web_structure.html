@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+    <div class='jumbotron description'>
+        <div class = 'col-lg-12'>
+        <a class=' flaskHideDisplay' href='#pop-up'>
+                Flask
+                <span class='showOnHover col-sm-4'>
+                    <embed class='code ' src="{{ url_for('static', filename='images/app.py') }}">
+                </span>
+            </a>
+        <a class='flaskHideDisplay' href='#pop-up'>
+            Layout
+            <span class='showOnHover col-sm-4'>
+                <embed class='code ' src="{{ url_for('static', filename='images/layout.txt') }}">
+            </span>
+        </a>
+        <a class='flaskHideDisplay' href='#pop-up'>
+            home.html
+            <span class='showOnHover col-sm-4'>
+                <embed class='code' src="{{ url_for('static', filename='images/home.txt') }}">
+            </span>
+        </a>
+        <a class='flaskHideDisplay' href='#pop-up'>
+            the Button
+            <span class='showOnHover col-sm-4'>
+                <embed class='code' src="{{ url_for('static', filename='images/button.txt') }}">
+            </span>
+        </a>
+        <a class='flaskHideDisplay' href='#pop-up'>
+            The Map
+            <span class='showOnHover col-sm-4'>
+                <embed class='code' src="{{ url_for('static', filename='images/app.js') }}">
+            </span>
+        </a>
+        <a class='flaskHideDisplay' href='#pop-up'>
+            Meta
+            <span class='showOnHover col-sm-4'>
+                <embed class='code' src="{{ url_for('static', filename='images/web_structure.txt') }}">
+            </span>
+        </a>
+        <!-- <a class='test'>Test</a> -->
+    </div>
+    <div class='newthing'>
+            display this text
+    </div>
+    <style>
+        .code{
+            margin-top: 40px;
+            height: 500px;
+            width: 10000px;
+            /* opacity: .9; */
+            position: absolute;
+        }
+        a.flaskHideDisplay {
+            padding: 50px
+        }
+        a.flaskHideDisplay span.showOnHover{
+            display: none;
+        }
+        a.flaskHideDisplay:hover span.showOnHover{
+            display:block;
+            position:absolute;
+            
+        }
+        a.flaskHideDisplay:hover{
+            z-index: 30;
+        }
+        .newthing {
+            display:none;
+        }
+        .test:hover .newthing{
+            display:block;
+        }
+
+    </style>
+{% endblock %}
