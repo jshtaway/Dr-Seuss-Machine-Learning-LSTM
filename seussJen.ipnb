@@ -1878,11 +1878,26 @@
    "metadata": {},
    "outputs": [
     {
+<<<<<<< HEAD
      "name": "stdout",
      "output_type": "stream",
      "text": [
       "44\n"
      ]
+=======
+     "data": {
+      "text/plain": [
+<<<<<<< HEAD
+       "'k'"
+=======
+       "'1'"
+>>>>>>> add34df1978cf7c28a249746e296b583fb802e7d
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+>>>>>>> d490a96dcd791495a05117e92db4ae8026e44ede
     }
    ],
    "source": [
@@ -2048,8 +2063,15 @@
   },
   {
    "cell_type": "code",
+<<<<<<< HEAD
+   "execution_count": 8,
+   "metadata": {
+    "scrolled": true
+   },
+=======
    "execution_count": 11,
    "metadata": {},
+>>>>>>> add34df1978cf7c28a249746e296b583fb802e7d
    "outputs": [],
    "source": [
     "# define the LSTM model\n",
