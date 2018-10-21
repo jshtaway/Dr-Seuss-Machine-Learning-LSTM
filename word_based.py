@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[178]:
+# In[ ]:
 
 
 import numpy
@@ -17,35 +17,8 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import to_categorical
 from keras.layers import Embedding, Flatten
 
-#notes from website:
-#-- Common values are 50, 100, and 300. We will use 50 here, --
-#-- but consider testing smaller or larger values. --
-#-- We will use a two LSTM hidden layers with 100 memory cells each. --
-#-- More memory cells and a deeper network may achieve better results. --
 
-#parameters
-drseuss_text = 'data/combinedText.txt'
-seed_length = 50
-epochs = 500
-batch_size=128
-modelList = [('LSTM',256,'True'), ('Dense',256,'relu'), ('Dropout',.2,''), 
-             ('LSTM',128,'True'), ('Dense',128,'relu'), ('Dropout',.2,''), 
-             ('LSTM', 64,'False'), ('Dense',64,'relu'), 
-             ('Flatten','',''),('Dense',vocab_size,'softmax')]
-#Create the model name
-modelName = f'm_{length}'
-for layer in modelList:
-    modelName+= f'_{layer[0]}_{layer[1]}_{layer[2]}'
-modelName += '.h5'
-modelName
-
-#create tokenizer file name .pkl
-tokenizerName = 'toke' + modelName.replace('m','',1).split('.h5')[0] + '.pkl'
-print(f'drseuss_text: \'{drseuss_text}\'\nseed_length: {seed_length}\nepochs: {epochs}\nbatch_size: {batch_size}'
-     f'\nmodelName: {modelName}\ntokenizerName: {tokenizerName}\nmodelList: {modelList}')
-
-
-# In[179]:
+# In[ ]:
 
 
 # load doc into memory
@@ -60,20 +33,29 @@ def load_doc(filename):
     return tokens
 
 # load document
-in_filename = 'data/combinedText.txt'
+drseuss_text = 'data/combinedText.txt'
 tokens = load_doc(drseuss_text)
 print(tokens[:200])
 print('Total Tokens: %d' % len(tokens))
 print('Unique Tokens: %d' % len(set(tokens)))
 
 
-# In[180]:
+# In[ ]:
 
+
+#--- PARAMETERS --- --- --- ---- --- --- ---- ---- --- ----- --- --- ----
+#--- --- ---- --- --- --- --- ---- --- --- --- ----- ---- ---- ---- ---- -
+drseuss_text = 'data/combinedText.txt'
+seed_length = 50
+length = seed_length + 1
+epochs = 500
+batch_size=128
+#--- --- ---- --- --- --- --- ---- --- --- --- ----- ---- ---- ---- ---- -
+#--- --- ---- --- --- --- --- ---- --- --- --- ----- ---- ---- ---- ---- -
 
 # organize into sequences of tokens
 #the plus one is because the last val in the list will be the expected prediction. 
 #Its our Y-train
-length = seed_length + 1
 sequences = list()
 for i in range(length, len(tokens)):
     # select sequence of tokens
@@ -91,7 +73,7 @@ print(f'sequences: {type(sequences[0])}')
 # y = df.iloc[:,-1]
 
 
-# In[181]:
+# In[ ]:
 
 
 tokenizer = Tokenizer()
@@ -104,15 +86,39 @@ sequences = tokenizer.texts_to_sequences(sequences)
 # print(f'sequences: {sequences}')
 
 
-# In[182]:
+# In[ ]:
 
 
-# vocabulary size
+# -- PARAMETERS -- ---- --- ---- --- --- ---- --- ---- --- ---- --- ---- ---
+#-- ---- ---- --- ---- ----- ---- ----- ---- ----- ----- ---- ---- ---- ----
 vocab_size = len(tokenizer.word_index) + 1
-vocab_size
+modelList = [('LSTM',256,'True'), ('Dense',256,'relu'), ('Dropout',.2,''), 
+             ('LSTM',128,'True'), ('Dense',128,'relu'), ('Dropout',.2,''), 
+             ('LSTM', 64,'False'), ('Dense',64,'relu'), 
+             ('Flatten','',''),('Dense',vocab_size,'softmax')]
+
+#notes from website:
+#-- Common values are 50, 100, and 300. We will use 50 here, --
+#-- but consider testing smaller or larger values. --
+#-- We will use a two LSTM hidden layers with 100 memory cells each. --
+#-- More memory cells and a deeper network may achieve better results. --
+#-- ---- ---- --- ---- ----- ---- ----- ---- ----- ----- ---- ---- ---- ----
+#-- ---- ---- --- ---- ----- ---- ----- ---- ----- ----- ---- ---- ---- ----
+
+#Create the model name
+modelName = f'm_{length}'
+for layer in modelList:
+    modelName+= f'_{layer[0]}_{layer[1]}_{layer[2]}'
+modelName += '.h5'
+modelName
+
+#create tokenizer file name .pkl
+tokenizerName = 'toke' + modelName.replace('m','',1).split('.h5')[0] + '.pkl'
+print(f'drseuss_text: \'{drseuss_text}\'\nseed_length: {seed_length}\nepochs: {epochs}\nbatch_size: {batch_size}'
+     f'\nmodelName: {modelName}\ntokenizerName: {tokenizerName}\nmodelList: {modelList}')
 
 
-# In[183]:
+# In[ ]:
 
 
 import pandas as pd
@@ -125,7 +131,7 @@ print(f'seq_length: {seq_length}\nshape of X: {X.shape}\nshape of y: {y.shape}')
 print(y[0])
 
 
-# In[184]:
+# In[ ]:
 
 
 # define model
@@ -137,7 +143,7 @@ for layer in modelList:
         #model.add(LSTM(100, return_sequences=True))
         (_, neurons, rsequences) = layer
         model.add(LSTM(neurons, return_sequences=rsequences))
-        print(f'model.add(LSTM({neurons}, return_sequences={return_sequences}))')
+        print(f'model.add(LSTM({neurons}, return_sequences={rsequences}))')
         
     if layer[0] == 'Dropout':
         #model.add(Dropout(0.2))
@@ -163,7 +169,7 @@ for layer in modelList:
 print(model.summary())
 
 
-# In[185]:
+# In[ ]:
 
 
 # compile model
@@ -172,7 +178,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 model.fit(X, y, batch_size=batch_size, epochs=epochs)
 
 
-# In[157]:
+# In[ ]:
 
 
 # save the model to file
@@ -187,7 +193,7 @@ model.save(modelName)
 dump(tokenizer, open(tokenizerName, 'wb'))
 
 
-# In[158]:
+# In[ ]:
 
 
 from random import randint
@@ -196,7 +202,7 @@ from keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
 
 
-# In[159]:
+# In[ ]:
 
 
 # generate a sequence from a language model
@@ -224,7 +230,7 @@ def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
     return ' '.join(result)
 
 
-# In[160]:
+# In[ ]:
 
 
 # load the model
@@ -234,7 +240,7 @@ model = load_model(modelName)
 tokenizer = load(open(tokenizerName, 'rb'))
 
 
-# In[161]:
+# In[ ]:
 
 
 # select a seed text
@@ -250,14 +256,14 @@ seed_text = ' '.join(seed_text.split(' ')[0:50])
 print(seed_text + '\n')
 
 
-# In[162]:
+# In[ ]:
 
 
 #encode our seed
 encoded = tokenizer.texts_to_sequences([seed_text])[0]
 
 
-# In[163]:
+# In[ ]:
 
 
 # generate new text
