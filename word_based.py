@@ -190,6 +190,9 @@ numpy_loss_history
 # In[ ]:
 
 
+#--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
+# -- Write Files ---- ---- ---- --- ---- --- --- --- -- 
+#--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
 loss_history = history_callback.history
 
 #create tokenizer file name .pkl
@@ -202,15 +205,39 @@ dump(tokenizer, open(tokenizerName, 'wb'))
 # save losses
 with open('h_' + modelName + '.txt', 'w+') as f:
     f.write(str(loss_history))
-#numpy.savetxt('h_' + modelName + '.txt', numpy_loss_history, delimiter=",")
 
 
-# In[ ]:
+# In[15]:
+
+
+# select a seed text
+# seed_text = lines[randint(0,len(lines))]
+seed_text = '''Whosever room this is should be ashamed!
+His underwear is hanging on the lamp.
+His raincoat is there in the overstuffed chair,
+And the chair is becoming quite mucky and damp.
+His workbook is wedged in the window,
+His sweater's been thrown on the floor.
+His scarf and one ski are'''
+
+print(seed_text + '\n')
+
+
+# In[13]:
 
 
 # generate a sequence from a language model
 #def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
 def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
+    # load the model
+    model = load_model(modelName)
+
+    # load the tokenizer
+    tokenizer = load(open(tokenizerName, 'rb'))
+    
+    #Make 50 words long
+    seed_text = ' '.join(seed_text.split(' ')[0:n_words])
+    
     result = list()
     in_text = seed_text
     # generate a fixed number of words
@@ -233,43 +260,19 @@ def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
     return ' '.join(result)
 
 
-# In[ ]:
+# In[16]:
 
 
-# load the model
-model = load_model(modelName)
- 
-# load the tokenizer
-tokenizer = load(open(tokenizerName, 'rb'))
-
-
-# In[ ]:
-
-
-# select a seed text
-# seed_text = lines[randint(0,len(lines))]
-seed_text = '''Whosever room this is should be ashamed!
-His underwear is hanging on the lamp.
-His raincoat is there in the overstuffed chair,
-And the chair is becoming quite mucky and damp.
-His workbook is wedged in the window,
-His sweater's been thrown on the floor.
-His scarf and one ski are'''
-seed_text = ' '.join(seed_text.split(' ')[0:50])
-print(seed_text + '\n')
-
-
-# In[ ]:
-
-
-#encode our seed
-encoded = tokenizer.texts_to_sequences([seed_text])[0]
-
-
-# In[ ]:
-
+model = 'm_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.h5'
+tokenizer = 'toke_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.pkl'
 
 # generate new text
 generated = generate_seq(model, tokenizer, seq_length, seed_text, seed_length)
 print(generated)
+
+
+# In[12]:
+
+
+tokenizer.texts_to_sequences(['hello', 'hi'])
 
