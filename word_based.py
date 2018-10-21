@@ -1,24 +1,25 @@
 
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
-import numpy
-from pickle import dump
-from keras.models import Sequential
+import numpy, sys
+from random import randint
+from pickle import dump, load
+from keras.models import Sequential, load_model
 from keras.layers import Dense
 from keras.layers import Dropout
 from keras.layers import LSTM
 from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils
-import sys
 from keras.preprocessing.text import Tokenizer
 from keras.utils import to_categorical
 from keras.layers import Embedding, Flatten
+from keras.preprocessing.sequence import pad_sequences
 
 
-# In[ ]:
+# In[2]:
 
 
 # load doc into memory
@@ -35,12 +36,12 @@ def load_doc(filename):
 # load document
 drseuss_text = 'data/combinedText.txt'
 tokens = load_doc(drseuss_text)
-print(tokens[:200])
+print(tokens[:100])
 print('Total Tokens: %d' % len(tokens))
 print('Unique Tokens: %d' % len(set(tokens)))
 
 
-# In[ ]:
+# In[3]:
 
 
 #--- PARAMETERS --- --- --- ---- --- --- ---- ---- --- ----- --- --- ----
@@ -48,7 +49,7 @@ print('Unique Tokens: %d' % len(set(tokens)))
 drseuss_text = 'data/combinedText.txt'
 seed_length = 50
 length = seed_length + 1
-epochs = 500
+epochs = 1000
 batch_size=128
 #--- --- ---- --- --- --- --- ---- --- --- --- ----- ---- ---- ---- ---- -
 #--- --- ---- --- --- --- --- ---- --- --- --- ----- ---- ---- ---- ---- -
@@ -73,7 +74,7 @@ print(f'sequences: {type(sequences[0])}')
 # y = df.iloc[:,-1]
 
 
-# In[ ]:
+# In[4]:
 
 
 tokenizer = Tokenizer()
@@ -86,7 +87,7 @@ sequences = tokenizer.texts_to_sequences(sequences)
 # print(f'sequences: {sequences}')
 
 
-# In[ ]:
+# In[5]:
 
 
 # -- PARAMETERS -- ---- --- ---- --- --- ---- --- ---- --- ---- --- ---- ---
@@ -105,20 +106,11 @@ modelList = [('LSTM',256,'True'), ('Dense',256,'relu'), ('Dropout',.2,''),
 #-- ---- ---- --- ---- ----- ---- ----- ---- ----- ----- ---- ---- ---- ----
 #-- ---- ---- --- ---- ----- ---- ----- ---- ----- ----- ---- ---- ---- ----
 
-#Create the model name
-modelName = f'm_{length}'
-for layer in modelList:
-    modelName+= f'_{layer[0]}_{layer[1]}_{layer[2]}'
-modelName += '.h5'
-modelName
-
-#create tokenizer file name .pkl
-tokenizerName = 'toke' + modelName.replace('m','',1).split('.h5')[0] + '.pkl'
 print(f'drseuss_text: \'{drseuss_text}\'\nseed_length: {seed_length}\nepochs: {epochs}\nbatch_size: {batch_size}'
-     f'\nmodelName: {modelName}\ntokenizerName: {tokenizerName}\nmodelList: {modelList}')
+     f'\nmodelList: {modelList}')
 
 
-# In[ ]:
+# In[6]:
 
 
 import pandas as pd
@@ -131,7 +123,7 @@ print(f'seq_length: {seq_length}\nshape of X: {X.shape}\nshape of y: {y.shape}')
 print(y[0])
 
 
-# In[ ]:
+# In[7]:
 
 
 # define model
@@ -169,37 +161,48 @@ for layer in modelList:
 print(model.summary())
 
 
-# In[ ]:
+# In[10]:
 
+
+#Create the model name
+modelName = f'{length}'
+for layer in modelList:
+    modelName+= f'_{layer[0]}_{layer[1]}_{layer[2]}'
 
 # compile model
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# define the checkpoint
+filepath=f"wi_{{epoch:02d}}_{{loss:.4f}}__{modelName}.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+callbacks_list = [checkpoint]
+
 # fit model
-model.fit(X, y, batch_size=batch_size, epochs=epochs)
+history_callback = model.fit(X, y, batch_size=batch_size, epochs=epochs, callbacks=callbacks_list)
+
+
+# In[9]:
+
+
+numpy_loss_history
 
 
 # In[ ]:
 
 
-# save the model to file
-modelName = f'm_{length}'
-for layer in modelList:
-    modelName+= f'_{layer[0]}_{layer[1]}_{layer[2]}'
-modelName += '.h5'
+loss_history = history_callback.history
+
+#create tokenizer file name .pkl
+tokenizerName = 'toke_' + modelName + '.pkl'
 
 # save the model to file
-model.save(modelName)
+model.save('m_' + modelName + '.h5')
 # save the tokenizer
 dump(tokenizer, open(tokenizerName, 'wb'))
-
-
-# In[ ]:
-
-
-from random import randint
-from pickle import load
-from keras.models import load_model
-from keras.preprocessing.sequence import pad_sequences
+# save losses
+with open('h_' + modelName + '.txt', 'w+') as f:
+    f.write(str(loss_history))
+#numpy.savetxt('h_' + modelName + '.txt', numpy_loss_history, delimiter=",")
 
 
 # In[ ]:
