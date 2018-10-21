@@ -4,11 +4,12 @@ import json
 
 #--- Convert ipynb file to a python file --- --- ---- --- --- ---- 
 for filename in os.listdir('.'):
-    if re.search('ipnb', filename):
+    if re.search('ipynb', filename):
+        print(filename)
         with open(filename, 'r') as f:
             nb = f.read()
         print(type(nb))
-        nb = json.loads(nb)
+        nb = json.dumps(nb)
         print(type(nb))
         with open(filename.split('.')[0]+'.py','w') as wf:
             for cell in nb['cells']:
