@@ -65,6 +65,7 @@ def sequencesCreate(length, tokens):
     # print(f'tokenizer: {tokenizer}')
     sequences = tokenizer.texts_to_sequences(sequences)
     # print(f'sequences: {sequences}')
+    
     return sequences, tokenizer
 
 
@@ -140,14 +141,10 @@ def modelFit(model, modelName, X, y, seq_length, batch_size, epochs):
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
 def writeFiles(modelName, history_callback):
     loss_history = history_callback.history
-
-    #create tokenizer file name .pkl
-    tokenizerName = 'toke_' + modelName + '.pkl'
-
+    
     # save the model to file
     model.save('m_' + modelName + '.h5')
-    # save the tokenizer
-    dump(tokenizer, open(tokenizerName, 'wb'))
+
     # save losses
     with open('h_' + modelName + '.txt', 'w+') as f:
         f.write(str(loss_history))
@@ -176,13 +173,13 @@ print(seed_text + '\n')
 #def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
 def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
     # load the model
-    model = load_model(modelName)
+    model = load_model(model)
 
     # load the tokenizer
     tokenizer = load(open(tokenizerName, 'rb'))
     
     #Make 50 words long
-    seed_text = ' '.join(seed_text.split(' ')[0:n_words])
+    seed_text = ' '.join(seed_text.split(' ')[0:seq_length])
     
     result = list()
     in_text = seed_text
@@ -254,6 +251,12 @@ def trainModelComplete():
     #oneThing = defineModel(vocab_size, seq_length, modelList)
     #print(oneThing)
     model, modelName = defineModel(vocab_size, seq_length, modelList, length)
+    #create tokenizer file name .pkl
+    tokenizerName = 'toke_' + modelName + '.pkl'
+    # save the tokenizer
+    dump(tokenizer, open(tokenizerName, 'wb'))
+    
+    
     history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs)
     writeFiles(modelName, history_callback)
 
@@ -279,5 +282,5 @@ if __name__ == '__main__':
 # In[ ]:
 
 
-trainModelComplete()
+#trainModelComplete()
 
