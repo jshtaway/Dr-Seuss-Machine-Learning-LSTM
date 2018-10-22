@@ -171,9 +171,9 @@ print(seed_text + '\n')
 
 # generate a sequence from a language model
 #def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
-def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
+def generate_seq(modelName, tokenizerName, seq_length, seed_text, n_words):
     # load the model
-    model = load_model(model)
+    model = load_model(modelName)
 
     # load the tokenizer
     tokenizer = load(open(tokenizerName, 'rb'))
