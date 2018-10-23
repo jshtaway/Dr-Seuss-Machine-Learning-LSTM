@@ -368,7 +368,7 @@ def jsonify_the_old_style_file(filepath = '.'):
     while os.path.isfile(jsonFile):
         i = str(int(i)+1)
         jsonFile = f"Alldata{i}.json"
-    tokenizer = 'toke_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.pkl'
+    tokenizer = filepath + '/toke_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.pkl'
     jsondict = {'sequences': ['no_data']*112, 'model':None, 'loss': ['no_data']*112}
     for filename in os.listdir(filepath):
         m = re.search('wi_(..)_(......)__(.*).hdf5', filename)
