@@ -180,7 +180,7 @@ def trainModelComplete(results_path):
     drseuss_text = 'data/combinedText.txt'
     seed_length = 50
     length = seed_length + 1
-    epochs = 3
+    epochs = 2
     batch_size = 128
     #-- ---- ---- --- ---- ----- ---- ----- ---- ----- ----- ---- ---- ---- ----
     
@@ -215,8 +215,8 @@ def trainModelComplete(results_path):
     modelList = [{'model':'Embedding', 'input_dim':vocab_size, 'output_dim': 512, 'input_length': seq_length},
                  {'model': 'LSTM', 'units':512, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
                  {'model': 'Dense','units':100,'activation':'relu'}, 
-                 {'model': 'LSTM', 'units':512, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
-                 {'model': 'Dense','units':100,'activation':'relu'}, 
+#                  {'model': 'LSTM', 'units':512, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
+#                  {'model': 'Dense','units':100,'activation':'relu'}, 
                  {'model':'Flatten'},
                  {'model': 'Dense','units':vocab_size,'activation':'softmax'},
                 ]
@@ -235,8 +235,8 @@ def trainModelComplete(results_path):
     #-- Fit model -- ---- --- --- --- ---- --- --- ---- --- --- --- --- --- --- --- --- 
     history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_path)
     loss_history = history_callback.history
-    with open(results_path.rstrip('/').lstrip('/') + f'/{modelName}_loss_history.txt') as f:
-        f.write(loss_history)
+    with open(results_path.rstrip('/').lstrip('/') + f'/{modelName}_loss_history.txt', 'w+') as f:
+        f.write(str(loss_history))
 
 
 # In[8]:
@@ -330,7 +330,7 @@ def json_create(filepath = '.'):
                 #print(f"{date+'_'+time} not in KEYS: \n{datetime.keys()}")
                 tokenizer = filepath+f'/token_{date}_{time}.pkl'
                 try:
-                    with open(filepath+'/info_' + date+'_'+time + '.txt') as f:
+                    with open(filepath.rstrip('/').lstrip('/')+'/info_' + date+'_'+time + '.txt') as f:
                         text = f.read()
                     modelList = text.split(']')[0] + ']'
                     modelHistory = '{' + ']'.join(text.split(']')[1:]).split('{')[1]
@@ -339,7 +339,7 @@ def json_create(filepath = '.'):
                     modelList = ast.literal_eval(modelList)
                     epochs = modelHistory['epochs']
                     if os.path.isfile(f"{date+'_'+time}_loss_history.txt"):
-                        with open(f"{date+'_'+time}_loss_history.txt") as f:
+                        with open(f"{filepath.rstrip('/').lstrip('/')}/{date+'_'+time}_loss_history.txt") as f:
                             model_history = f.read()
                         model_history = ast.literal_eval(model_history)
                         modelHistory['model_history'] = model_history
