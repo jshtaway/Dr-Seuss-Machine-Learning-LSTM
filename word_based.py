@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import numpy, sys, os, pandas as pd
@@ -9,7 +9,7 @@ from random import randint
 from pickle import dump, load
 
 
-# In[ ]:
+# In[2]:
 
 
 # load doc into memory
@@ -27,7 +27,7 @@ def load_doc(filename):
     return tokens
 
 
-# In[ ]:
+# In[3]:
 
 
 # organize into sequences of tokens
@@ -102,22 +102,6 @@ def writeFiles(model, modelName, history_callback, modelList, seq_length, total_
 # In[6]:
 
 
-# select a seed text
-# seed_text = lines[randint(0,len(lines))]
-seed_text = '''Whosever room this is should be ashamed!
-His underwear is hanging on the lamp.
-His raincoat is there in the overstuffed chair,
-And the chair is becoming quite mucky and damp.
-His workbook is wedged in the window,
-His sweater's been thrown on the floor.
-His scarf and one ski are'''
-
-print(seed_text + '\n')
-
-
-# In[7]:
-
-
 # define model
 def defineModel(vocab_size, seq_length, modelList, length, input_shape):
     from keras.models import Sequential
@@ -182,7 +166,7 @@ def defineModel(vocab_size, seq_length, modelList, length, input_shape):
     return model, modelName
 
 
-# In[14]:
+# In[7]:
 
 
 def trainModelComplete(results_path):
@@ -229,12 +213,10 @@ def trainModelComplete(results_path):
 #                  {'model':'Flatten'},
 #                  {'model': 'Dense','units':vocab_size,'activation':'softmax'},
 #                 ]
-    modelList = [{'model':'Embedding', 'input_dim':vocab_size, 'output_dim': 256, 'input_length': seq_length},
-                 {'model': 'LSTM', 'units':256, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
+    modelList = [{'model':'Embedding', 'input_dim':vocab_size, 'output_dim': 512, 'input_length': seq_length},
+                 {'model': 'LSTM', 'units':512, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
                  {'model': 'Dense','units':100,'activation':'relu'}, 
-                 {'model': 'LSTM', 'units':256, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
-                 {'model': 'Dense','units':100,'activation':'relu'}, 
-                 {'model': 'LSTM', 'units':256, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
+                 {'model': 'LSTM', 'units':512, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
                  {'model': 'Dense','units':100,'activation':'relu'}, 
                  {'model':'Flatten'},
                  {'model': 'Dense','units':vocab_size,'activation':'softmax'},
@@ -255,7 +237,7 @@ def trainModelComplete(results_path):
     writeFiles(model, modelName, history_callback, modelList, seq_length, len(sequences), epochs, batch_size, results_path)
 
 
-# In[9]:
+# In[8]:
 
 
 # generate a sequence from a language model
@@ -296,7 +278,7 @@ def generate_seq(modelName, tokenizerName, seq_length, seed_text, n_words):
     return ' '.join(result)
 
 
-# In[10]:
+# In[9]:
 
 
 # modelList = [{'model':'Embedding', 'input_dim':2830, 'output_dim': 256, 'input_length': 50},
@@ -312,11 +294,11 @@ def generate_seq(modelName, tokenizerName, seq_length, seed_text, n_words):
 # writeFiles('NULL', '2018-10-22_11-31', history_callback, modelList, 50, total_sequences = 16175)
 
 
-# In[ ]:
+# In[11]:
 
 
 if __name__ == '__main__':
-    trainModelComplete()
+    trainModelComplete('.')
 
 
 # In[ ]:
@@ -325,7 +307,7 @@ if __name__ == '__main__':
 #trainModelComplete()
 
 
-# In[11]:
+# In[ ]:
 
 
 def json_create(filepath = '.'):
@@ -368,7 +350,7 @@ def json_create(filepath = '.'):
         json.dump(datetime, fp)
 
 
-# In[13]:
+# In[ ]:
 
 
 #wi_76_0.0010__51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.hdf
