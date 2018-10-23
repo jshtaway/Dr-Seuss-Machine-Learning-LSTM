@@ -61,13 +61,13 @@ def sequencesCreate(length, tokens):
 # In[4]:
 
 
-def modelFit(model, modelName, X, y, seq_length, batch_size, epochs):
+def modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_path):
     from keras.callbacks import ModelCheckpoint
     # compile model
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     # define the checkpoint
-    filepath=f"wi_{{epoch:02d}}_{{loss:.4f}}_{modelName}.hdf5"
+    filepath=f"{results_path.rstrip('/')}/wi_{{epoch:02d}}_{{loss:.4f}}_{modelName}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
     callbacks_list = [checkpoint]
 
@@ -250,7 +250,7 @@ def trainModelComplete(results_path):
     #-- save the tokenizer --- --- --- ---- --- --- ---- --
     dump(tokenizer, open('token_'+modelName+'.pkl', 'wb'))
     #-- Fit model -- ---- --- --- --- ---- --- --- ---- --- --- --- --- --- --- --- --- 
-    history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs)
+    history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_path)
     #-- Save history and final model --- -
     writeFiles(model, modelName, history_callback, modelList, seq_length, len(sequences), epochs, batch_size, results_path)
 
