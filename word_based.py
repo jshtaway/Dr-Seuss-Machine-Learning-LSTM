@@ -316,10 +316,10 @@ def json_create(filepath = '.'):
     import os, ast, json, re, seed
     datetime = {}
     #-- Determine JSON file name -- 
-    jsonFile = 'Alldata.json'; i = '0'
+    jsonFile = f'{filepath}/Alldata.json'; i = '0'
     while os.path.isfile(jsonFile):
         i = str(int(i)+1)
-        jsonFile = f"Alldata{i}.json"
+        jsonFile = f"{filepath}/Alldata{i}.json"
         
     for filename in os.listdir(filepath):
         #wi_01_6.7077__2018-10-22_09-29.hdf5
@@ -363,11 +363,11 @@ def json_create(filepath = '.'):
 #wi_76_0.0010__51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.hdf
 def jsonify_the_old_style_file(filepath = '.'):
     import seed, re, os, json
-    jsonFile = 'Alldata.json'; i = '0'
+    jsonFile = filepath + '/Alldata.json'; i = '0'
     #-- Determine JSON file name -- 
     while os.path.isfile(jsonFile):
         i = str(int(i)+1)
-        jsonFile = f"Alldata{i}.json"
+        jsonFile = f"{filepath}/Alldata{i}.json"
     tokenizer = filepath + '/toke_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.pkl'
     jsondict = {'sequences': ['no_data']*112, 'model':None, 'loss': ['no_data']*112}
     for filename in os.listdir(filepath):
