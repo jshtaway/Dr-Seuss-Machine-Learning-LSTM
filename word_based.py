@@ -368,12 +368,13 @@ def json_create(filepath = '.'):
 def jsonify_the_old_style_file(filepath = '.'):
     import seed
     tokenizer = 'toke_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.pkl'
-    jsondict = {'sequences': ['no_model_data']*82, 'model':None}
+    jsondict = {'sequences': ['no_data']*82, 'model':None, 'loss': ['no_data']*82}
     for filename in os.listdir(filepath):
         m = re.search('wi_(..)_(......)__(.*).hdf5', filename)
         if m:
             epoch, loss, modellist = m.group(1), m.group(2), m.group(3)
             jsondict['model'] = modellist
+            jsondict['loss'][int(epoch)] = float(loss)
             jsondict['sequences'][int(epoch)] = generate_seq(os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
     jsonFile = 'Alldata.json'; i = '0'
     #-- Determine JSON file name -- 
