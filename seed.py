@@ -1,0 +1,2 @@
+#exaclty 50 words. :)
+seed_text = '''Underneath the poet tree come rest a while with me and watch the way the word web weaves between the shady story leaves. branches of the poet tree reach from the mountains to the sea. So come and sit. and dream. and climb. just dont get hit by falling rhymes'''
