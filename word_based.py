@@ -82,11 +82,8 @@ def modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_pat
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
 # -- Write Files ---- ---- ---- --- ---- --- --- --- -- 
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
-def writeFiles(model, modelName, history_callback, modelList, seq_length, total_sequences, epochs, batch_size, results_path):
+def writeFiles(modelName, history_callback, modelList, seq_length, total_sequences, epochs, batch_size, results_path):
     loss_history = history_callback.history
-    
-    # save the model to file
-    model.save(results_path.rstrip('/') + '/m_' + modelName + '.h5')
     loss_history['seq_length'] = seq_length
     loss_history['total_sequences'] = total_sequences
     loss_history['batch_size'] = batch_size
@@ -231,10 +228,10 @@ def trainModelComplete(results_path):
     model, modelName = defineModel(vocab_size, seq_length, modelList, length, input_shape)
     #-- save the tokenizer --- --- --- ---- --- --- ---- --
     dump(tokenizer, open('token_'+modelName+'.pkl', 'wb'))
+    #-- Save history and final model --- -
+    writeFiles(modelName, history_callback, modelList, seq_length, len(sequences), epochs, batch_size, results_path)
     #-- Fit model -- ---- --- --- --- ---- --- --- ---- --- --- --- --- --- --- --- --- 
     history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_path)
-    #-- Save history and final model --- -
-    writeFiles(model, modelName, history_callback, modelList, seq_length, len(sequences), epochs, batch_size, results_path)
 
 
 # In[8]:
