@@ -76,19 +76,22 @@ def modelFit(model, modelName, X, y, seq_length, batch_size, epochs):
     return history_callback
 
 
-# In[5]:
+# In[54]:
 
 
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
 # -- Write Files ---- ---- ---- --- ---- --- --- --- -- 
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
-def writeFiles(model, modelName, history_callback, modelList, seq_length, total_sequences):
+def writeFiles(model, modelName, history_callback, modelList, seq_length, total_sequences, epochs, batch_size):
     loss_history = history_callback.history
     
     # save the model to file
     model.save('m_' + modelName + '.h5')
     loss_history['seq_length'] = seq_length
     loss_history['total_sequences'] = total_sequences
+    loss_history['batch_size'] = batch_size
+    loss_history['epochs'] = epochs
+    
     # save losses
     with open('info_' + modelName + '.txt', 'w+') as f:
         f.write(str(modelList))
@@ -242,7 +245,7 @@ def trainModelComplete():
     #-- Fit model -- ---- --- --- --- ---- --- --- ---- --- --- --- --- --- --- --- --- 
     history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs)
     #-- Save history and final model --- -
-    writeFiles(model, modelName, history_callback, modelList, seq_length, total_sequences = len(sequences))
+    writeFiles(model, modelName, history_callback, modelList, seq_length, total_sequences = len(sequences), epochs, batch_size)
 
 
 # In[22]:
@@ -315,18 +318,19 @@ if __name__ == '__main__':
 #trainModelComplete()
 
 
-# In[35]:
+# In[65]:
 
 
 def json_create(filepath = '.'):
     import os, ast, json, re, seed
+    datetime = {}
     for filename in os.listdir(filepath):
         #wi_01_6.7077__2018-10-22_09-29.hdf5
         m = re.search('wi_(..)_(......)__*(....-..-..)_(..-..).hdf5', filename)
-        datetime = {}
         if m:
             epoch, loss, date, time = m.group(1), m.group(2), m.group(3), m.group(4)
             if date+'_'+time not in datetime.keys():
+                #print(f"{date+'_'+time} not in KEYS: \n{datetime.keys()}")
                 tokenizer = filepath+f'/token_{date}_{time}.pkl'
                 try:
                     with open(filepath+'/info_' + date+'_'+time + '.txt') as f:
@@ -336,21 +340,150 @@ def json_create(filepath = '.'):
                     print(f"NEW DATA: {date+'_'+time}")
                     modelHistory = ast.literal_eval(modelHistory)
                     modelList = ast.literal_eval(modelList)
+                    epochs = modelHistory['epochs']
                 except:
                     modelList = []
                     modelHistory = {}
                 datetime[date+'_'+time] = {'model_list': modelList,
-                                       'model_history': modelHistory,
-                                       'sequence_list': {}}
-            datetime[date+'_'+time]['sequence_list'][epoch] = generate_seq(os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
-            print('\n',filename, ": ",datetime[date+'_'+time]['sequence_list'][epoch])
-        
-    with open('Alldata.json', 'w+') as fp:
+                                           'model_history': modelHistory,
+                                           'sequence_list': ['no_model_data']*(epochs+1)}
+                print(datetime)
+            datetime[date+'_'+time]['sequence_list'][int(epoch)] = generate_seq(os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
+            print('\n',filename, ": ",datetime[date+'_'+time]['sequence_list'][int(epoch)])
+    #-- Write JSON file of all model training data --- 
+    jsonFile = 'Alldata.json'; i = '0'
+    #-- Determine JSON file name -- 
+    while os.path.isfile(jsonFile):
+        i = str(int(i)+1)
+        jsonFile = f"Alldata{i}.json"
+    #-- Write JSON file -- --- ----
+    with open(jsonFile, 'w+') as fp:
         json.dump(datetime, fp)
+
+
+# In[66]:
+
+
+json_create()
 
 
 # In[ ]:
 
 
-json_create()
+NEW DATA: 2018-10-22_11-31
+
+ wi_21_0.0591__2018-10-22_11-31.hdf5 :  noise. shouting shouting the place of i at clover that clover again long the i of the never in to ten the no and of the in the the of said while and the of and then of the me and and and but a ie and just the great
+
+ wi_01_6.7077__2018-10-22_09-29.hdf5 :  the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the
+
+ wi_09_1.6076__2018-10-22_09-29.hdf5 :  out now lorax. without without the speck whoville whos whos out with the the they belly three stars from they they you know still of the the had had them them them his belly star who were had bellies things stars. a a a when they in in one the
+NEW DATA: 2018-10-22_11-31
+
+ wi_24_0.0369__2018-10-22_11-31.hdf5 :  noise. shouting shouting they place of i the clover they clover that a the they they they you. in to ten the ill all a the in the them the the of think the they thing the and he in in the the will a the they the of the
+
+ wi_02_6.3432__2018-10-22_09-29.hdf5 :  the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the
+NEW DATA: 2018-10-22_11-31
+
+ wi_14_0.3948__2018-10-22_11-31.hdf5 :  noise. noise. shouting they place up up down down down down than the the they are they are for the who to the they and the boys up in the head while my just just just the of you it it end end end a the grass dog and and
+NEW DATA: 2018-10-22_11-31
+
+ wi_16_0.2132__2018-10-22_11-31.hdf5 :  noise. noise. shouting the heard to and down would down clover than long the i then were all in to my the no that his and that and in the i of the of of of then of the in of up you and right this a butter butter heard
+NEW DATA: 2018-10-22_11-31
+
+ wi_05_5.0674__2018-10-22_11-31.hdf5 :  noise. noise. the the the the the the the the the the the the the he he he he he he the took took took took took took took took took the the the the the the the the the the the the the the the the the took beast.
+NEW DATA: 2018-10-22_11-31
+
+ wi_03_6.0809__2018-10-22_11-31.hdf5 :  the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the
+
+ wi_10_1.1444__2018-10-22_09-29.hdf5 :  out this whole now without my my end my came we your the we house here. just just voice clear clear im pile the of the he would by the shake very were theyd he theyd he sneetches head sing. little feast. feast. worst. worst. worst. worst. worst. worst. worst.
+NEW DATA: 2018-10-22_11-31
+
+ wi_13_0.5278__2018-10-22_11-31.hdf5 :  noise. shouting shouting they place up up down down down down and bright hill. the a they raced for to still. the in and a and that up a for head while of your just just who is it of a a a a a can can is i i
+NEW DATA: 2018-10-22_11-31
+
+ wi_17_0.1515__2018-10-22_11-31.hdf5 :  noise. noise. shouting the to of and and they that clover that then the i a the and in the and and that that and the in the in the i of the and and that and of the in of the and and a butter butter the with this
+NEW DATA: 2018-10-22_11-31
+
+ wi_26_0.0271__2018-10-22_11-31.hdf5 :  noise. noise. shouting the place up i at clover that clover again long the i are the you. for the too to the down and his in and the the side the i just the just the how for to the town ive will a this and the and with
+
+ wi_08_2.2403__2018-10-22_09-29.hdf5 :  out by whole lorax. the of my end my of out again the the just just just just was the of the he still he the he was still still the he a he he packed the he packed the plain grass out out out out out out the they
+NEW DATA: 2018-10-22_11-31
+
+ wi_37_0.0067__2018-10-22_11-31.hdf5 :  noise. noise. shouting dont when up his down he air. clover that bright the they are the never for the in the once and a and and and in the the while of just of just who they was be a a and a a make a a and and
+
+ wi_06_4.0345__2018-10-22_09-29.hdf5 :  had the whole the the of they they plain plain plain plain belly belly belly belly belly belly had belly belly belly belly they they sneetches thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars. thars.
+NEW DATA: 2018-10-22_11-31
+
+ wi_23_0.0395__2018-10-22_11-31.hdf5 :  noise. noise. shouting the place of i at clover down clover again long he trees said they never in the ten the lifted one the and and the in the head while the what and just then and the of of a all a a a butter the of heard
+NEW DATA: 2018-10-22_11-31
+
+ wi_09_1.8358__2018-10-22_11-31.hdf5 :  noise. noise. shouting noise. place up end down down down air. out bright the great great the never for the then the last had the the he he them them how while just just while that that the the end mayor mayor and than the one grass the the morning
+
+ wi_05_4.9483__2018-10-22_09-29.hdf5 :  the the the the the the the the the the the the the knew knew knew their their that they they they they they noise. noise. noise. noise. the the the the plain belly belly the the the the sneetches sneetches sneetches sneetches sneetches sneetches sneetches sneetches sneetches sneetches sneetches
+NEW DATA: 2018-10-22_11-31
+
+ wi_15_0.2838__2018-10-22_11-31.hdf5 :  noise. noise. shouting noise. heard up would down down down the that bright the they are were all for to and a and and a up a and how the in thought thought just a they and will the of of of he he as can with the and himself
+NEW DATA: 2018-10-22_11-31
+
+ wi_01_6.8130__2018-10-22_11-31.hdf5 :  the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the
+
+ wi_04_5.6446__2018-10-22_09-29.hdf5 :  the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the was was the the
+NEW DATA: 2018-10-22_11-31
+
+ wi_07_3.2263__2018-10-22_11-31.hdf5 :  noise. noise. shouting grow. his a a that down the the the the the the the he the im king king king and a a the he them them them them one a and they they they jim jim jim the the the the he them the a a a
+NEW DATA: 2018-10-22_11-31
+
+ wi_19_0.0862__2018-10-22_11-31.hdf5 :  noise. noise. shouting the place of and that clover down clover with then the i a the in in the and the in that a and he the in the thought of the i and he then and the of a a and a deep this a all a i
+NEW DATA: 2018-10-22_11-31
+
+ wi_18_0.1078__2018-10-22_11-31.hdf5 :  noise. noise. shouting the heard of and down would down clover clover long the i are the i and the in the once more and the that the in the i the you and and they then and the in of the and and then and a the butter a
+NEW DATA: 2018-10-22_11-31
+
+ wi_04_5.6680__2018-10-22_11-31.hdf5 :  the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the
+NEW DATA: 2018-10-22_11-31
+
+ wi_36_0.0133__2018-10-22_11-31.hdf5 :  noise. yertle. shouting dont when of his and he air. clover that again the they are the a for the in the all and a and and and in the great of think the of just the of was in it of you of a a a a a i
+NEW DATA: 2018-10-22_11-31
+
+ wi_38_0.0048__2018-10-22_11-31.hdf5 :  noise. yertle. shouting dont when up his down he air. clover that bright the they are the up for the in the all and a and and and in the great while the just of just just just was in a a a a a a a a and i
+NEW DATA: 2018-10-22_11-31
+
+ wi_11_0.9936__2018-10-22_11-31.hdf5 :  noise. noise. shouting sad place up would down down down clover again long the of the were never the and then the them and the and that the them the while while the they they high when was the of a the and of the a a the and that
+NEW DATA: 2018-10-22_11-31
+
+ wi_22_0.0499__2018-10-22_11-31.hdf5 :  noise. shouting shouting they place of and the clover they clover that a the they are the and in the and and the that a the in the the in the in and the they and the then of a it a the a a a a the a in
+NEW DATA: 2018-10-22_11-31
+
+ wi_20_0.0653__2018-10-22_11-31.hdf5 :  noise. shouting shouting the to of i would would down clover and long the i of the and in to too the in down a the in the them of the while i the and and then of have to a a and you a all i just good with
+NEW DATA: 2018-10-22_11-31
+
+ wi_12_0.7174__2018-10-22_11-31.hdf5 :  noise. noise. than they they to up down down down down down bright hill. the are they the in and who to once that and and that head a that how your of can can who who is was there there a the to a can can the i and
+
+ wi_07_3.0815__2018-10-22_09-29.hdf5 :  the the the the of put put put the plain plain plain the the had had stars stars all. the the the had had had the the whos whos of of the plain the the of of the when the plain that stars stars stars the the or the the
+NEW DATA: 2018-10-22_11-31
+
+ wi_25_0.0275__2018-10-22_11-31.hdf5 :  noise. noise. his the place of i at clover that clover again long he i of the you. in the too was that that a the that up the in the found i the the started for the for the in of will you a this all just the in
+NEW DATA: 2018-10-22_11-31
+
+ wi_35_0.0202__2018-10-22_11-31.hdf5 :  noise. noise. shouting dont when up his down he air. clover that bright the they are the never don the in the all and a and and and in the thought while the just of the who of the in a a and he a a a a a and
+NEW DATA: 2018-10-22_11-31
+
+ wi_02_6.3438__2018-10-22_11-31.hdf5 :  the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the
+NEW DATA: 2018-10-22_11-31
+
+ wi_08_2.4416__2018-10-22_11-31.hdf5 :  noise. noise. noise. sad place while up that to down the clover the the trees a the and never to wind the the last the the the his them and head and last while while and and and the he it mayor and than was the to the the to
+NEW DATA: 2018-10-22_11-31
+
+ wi_06_4.1888__2018-10-22_11-31.hdf5 :  noise. noise. noise. noise. a a clover clover clover clover the the the the he he he he he he mile splashing splashing the breeze. he he breeze. puzzling splashing trees. a throne. a a air. and and he he the he he he he he he was mile mile
+NEW DATA: 2018-10-22_11-31
+
+ wi_10_1.3483__2018-10-22_11-31.hdf5 :  noise. noise. than they place up a down down down clover than the the they a were and for the then and that that and the in of them them the while of your just and that the in of the mayor that the trees the dog and the away.
+
+ wi_03_6.0946__2018-10-22_09-29.hdf5 :  the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the
+
+
+# In[58]:
+
+
+['no_model_data']*50
 
