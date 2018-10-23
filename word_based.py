@@ -378,7 +378,7 @@ def jsonify_the_old_style_file(filepath = '.'):
     jsondict = {'sequences': ['no_data']*112, 'model':None, 'loss': ['no_data']*112}
     for filename in os.listdir(filepath):
         m = re.search('wi_(..)_(......)__(.*).hdf5', filename)
-        if m:
+        if m and re.search('51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax', filename):
             epoch, loss, modellist = m.group(1), m.group(2), m.group(3)
             jsondict['model'] = modellist
             jsondict['loss'][int(epoch)] = float(loss)
