@@ -363,6 +363,11 @@ def json_create(filepath = '.'):
 #wi_76_0.0010__51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.hdf
 def jsonify_the_old_style_file(filepath = '.'):
     import seed, re, os, json
+    jsonFile = 'Alldata.json'; i = '0'
+    #-- Determine JSON file name -- 
+    while os.path.isfile(jsonFile):
+        i = str(int(i)+1)
+        jsonFile = f"Alldata{i}.json"
     tokenizer = 'toke_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.pkl'
     jsondict = {'sequences': ['no_data']*112, 'model':None, 'loss': ['no_data']*112}
     for filename in os.listdir(filepath):
@@ -372,13 +377,8 @@ def jsonify_the_old_style_file(filepath = '.'):
             jsondict['model'] = modellist
             jsondict['loss'][int(epoch)] = float(loss)
             jsondict['sequences'][int(epoch)] = generate_seq(os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
-            print(jsondict['sequences'][int(epoch)])
-    jsonFile = 'Alldata.json'; i = '0'
-    #-- Determine JSON file name -- 
-    while os.path.isfile(jsonFile):
-        i = str(int(i)+1)
-        jsonFile = f"Alldata{i}.json"
-    #-- Write JSON file -- --- ----
-    with open(jsonFile, 'w+') as fp:
-        json.dump(datetime, fp)
+            print(epochs, ': ', jsondict['sequences'][int(epoch)])
+            #-- Write JSON file -- --- ----
+            with open(jsonFile, 'w+') as fp:
+                json.dump(datetime, fp)
 
