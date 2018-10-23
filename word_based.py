@@ -82,18 +82,18 @@ def modelFit(model, modelName, X, y, seq_length, batch_size, epochs):
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
 # -- Write Files ---- ---- ---- --- ---- --- --- --- -- 
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
-def writeFiles(model, modelName, history_callback, modelList, seq_length, total_sequences, epochs, batch_size):
+def writeFiles(model, modelName, history_callback, modelList, seq_length, total_sequences, epochs, batch_size, results_path):
     loss_history = history_callback.history
     
     # save the model to file
-    model.save('m_' + modelName + '.h5')
+    model.save(results_path.rstrip('/') + '/m_' + modelName + '.h5')
     loss_history['seq_length'] = seq_length
     loss_history['total_sequences'] = total_sequences
     loss_history['batch_size'] = batch_size
     loss_history['epochs'] = epochs
     
     # save losses
-    with open('info_' + modelName + '.txt', 'w+') as f:
+    with open(results_path.rstrip('/') + '/info_' + modelName + '.txt', 'w+') as f:
         f.write(str(modelList))
         f.write('\n')
         f.write(str(loss_history))
@@ -182,10 +182,10 @@ def defineModel(vocab_size, seq_length, modelList, length, input_shape):
     return model, modelName
 
 
-# In[8]:
+# In[14]:
 
 
-def trainModelComplete():
+def trainModelComplete(results_path):
     from keras.utils import to_categorical
     
     #--- PARAMETERS --- --- --- ---- --- --- ---- ---- --- ----- --- --- ----
@@ -252,7 +252,7 @@ def trainModelComplete():
     #-- Fit model -- ---- --- --- --- ---- --- --- ---- --- --- --- --- --- --- --- --- 
     history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs)
     #-- Save history and final model --- -
-    writeFiles(model, modelName, history_callback, modelList, seq_length, len(sequences), epochs, batch_size)
+    writeFiles(model, modelName, history_callback, modelList, seq_length, len(sequences), epochs, batch_size, results_path)
 
 
 # In[9]:
