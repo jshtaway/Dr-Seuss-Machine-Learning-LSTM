@@ -377,8 +377,8 @@ def jsonify_the_old_style_file(filepath = '.'):
             jsondict['model'] = modellist
             jsondict['loss'][int(epoch)] = float(loss)
             jsondict['sequences'][int(epoch)] = generate_seq(os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
-            print(epochs, ': ', jsondict['sequences'][int(epoch)])
+            print(epoch, ': ', jsondict['sequences'][int(epoch)])
             #-- Write JSON file -- --- ----
             with open(jsonFile, 'w+') as fp:
-                json.dump(datetime, fp)
+                json.dump(jsondict, fp)
 
