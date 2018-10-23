@@ -221,18 +221,25 @@ def trainModelComplete():
     #-- -- ---- --- --- --- --- --- ---- --- --- --- --
 
     #-- Model List --- --- --- --- --- --- --- --- --- -- ---- --- --- --- ---- -- --
+#     modelList = [{'model':'Embedding', 'input_dim':vocab_size, 'output_dim': 256, 'input_length': seq_length},
+#                  {'model': 'LSTM', 'units':256, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
+#                  {'model': 'Dense','units':64,'activation':'relu'}, 
+#                  {'model': 'LSTM', 'units':256, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
+#                  {'model': 'Dense','units':64,'activation':'relu'}, 
+#                  {'model':'Flatten'},
+#                  {'model': 'Dense','units':vocab_size,'activation':'softmax'},
+#                 ]
     modelList = [{'model':'Embedding', 'input_dim':vocab_size, 'output_dim': 256, 'input_length': seq_length},
                  {'model': 'LSTM', 'units':256, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
-                 {'model': 'Dense','units':64,'activation':'relu'}, 
+                 {'model': 'Dense','units':100,'activation':'relu'}, 
                  {'model': 'LSTM', 'units':256, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
-                 {'model': 'Dense','units':64,'activation':'relu'}, 
+                 {'model': 'Dense','units':100,'activation':'relu'}, 
+                 {'model': 'LSTM', 'units':256, 'use_bias':True, 'dropout':.2, 'recurrent_dropout': 0, 'return_sequences': True}, 
+                 {'model': 'Dense','units':100,'activation':'relu'}, 
                  {'model':'Flatten'},
                  {'model': 'Dense','units':vocab_size,'activation':'softmax'},
                 ]
-#     modelList = [('Embedding', vocab_size, seq_length), ('LSTM',256,'True'), ('Dense',256,'relu'), ('Dropout',.2,''), 
-#                  ('LSTM',128,'True'), ('Dense',128,'relu'), ('Dropout',.2,''), 
-#                  ('LSTM', 64,'False'), ('Dense',64,'relu'), 
-#                  ('Flatten','',''),('Dense',vocab_size,'softmax')]
+
     #-- --- ---- --- ---- --- --- ---- --- ---- --- ---- --- ---- --- --- --- --- ---
     
     print(f'drseuss_text: \'{drseuss_text}\'\nseed_length: {seed_length}\nepochs: {epochs}\nbatch_size: {batch_size}'
