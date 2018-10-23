@@ -244,9 +244,22 @@ def trainModelComplete(results_path):
 
 # generate a sequence from a language model
 #def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
-def generate_seq(modelName, tokenizerName, seq_length, seed_text, n_words):
+def generate_seq(seq_length, seed_text, n_words, filepath = '', modelName = '', tokenizerName = '', ):
     from keras.models import load_model
     from keras.preprocessing.sequence import pad_sequences
+    import re
+
+    if filepath :
+        highest_epoch = 0
+        for filename in os.listdir(filepath):
+            m = re.search('^wi_(\d+)_', filename)
+            if m:
+                if int(m.group(1)) > highest_epoch:
+                    highest_epoch = int(m.group(1))
+                    modelName = filepath+'/'+filename
+            if re.search('token', filename):
+                tokenizerName = filepath+'/'+filename
+        
     # load the model
     model = load_model(modelName)
 
