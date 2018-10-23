@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import numpy, sys, os, pandas as pd
@@ -9,7 +9,7 @@ from random import randint
 from pickle import dump, load
 
 
-# In[2]:
+# In[ ]:
 
 
 # load doc into memory
@@ -27,7 +27,7 @@ def load_doc(filename):
     return tokens
 
 
-# In[3]:
+# In[ ]:
 
 
 # organize into sequences of tokens
@@ -58,7 +58,7 @@ def sequencesCreate(length, tokens):
     return sequences, tokenizer
 
 
-# In[15]:
+# In[4]:
 
 
 def modelFit(model, modelName, X, y, seq_length, batch_size, epochs):
@@ -76,7 +76,7 @@ def modelFit(model, modelName, X, y, seq_length, batch_size, epochs):
     return history_callback
 
 
-# In[54]:
+# In[5]:
 
 
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
@@ -182,7 +182,7 @@ def defineModel(vocab_size, seq_length, modelList, length, input_shape):
     return model, modelName
 
 
-# In[13]:
+# In[8]:
 
 
 def trainModelComplete():
@@ -245,10 +245,10 @@ def trainModelComplete():
     #-- Fit model -- ---- --- --- --- ---- --- --- ---- --- --- --- --- --- --- --- --- 
     history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs)
     #-- Save history and final model --- -
-    writeFiles(model, modelName, history_callback, modelList, seq_length, total_sequences = len(sequences), epochs, batch_size)
+    writeFiles(model, modelName, history_callback, modelList, seq_length, len(sequences), epochs, batch_size)
 
 
-# In[22]:
+# In[9]:
 
 
 # generate a sequence from a language model
@@ -289,7 +289,7 @@ def generate_seq(modelName, tokenizerName, seq_length, seed_text, n_words):
     return ' '.join(result)
 
 
-# In[11]:
+# In[10]:
 
 
 # modelList = [{'model':'Embedding', 'input_dim':2830, 'output_dim': 256, 'input_length': 50},
@@ -305,7 +305,7 @@ def generate_seq(modelName, tokenizerName, seq_length, seed_text, n_words):
 # writeFiles('NULL', '2018-10-22_11-31', history_callback, modelList, 50, total_sequences = 16175)
 
 
-# In[16]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -318,7 +318,7 @@ if __name__ == '__main__':
 #trainModelComplete()
 
 
-# In[65]:
+# In[11]:
 
 
 def json_create(filepath = '.'):
@@ -361,7 +361,7 @@ def json_create(filepath = '.'):
         json.dump(datetime, fp)
 
 
-# In[ ]:
+# In[12]:
 
 
 #wi_76_0.0010__51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.hdf
