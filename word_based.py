@@ -361,12 +361,12 @@ def json_create(filepath = '.'):
         json.dump(datetime, fp)
 
 
-# In[12]:
+# In[13]:
 
 
 #wi_76_0.0010__51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.hdf
 def jsonify_the_old_style_file(filepath = '.'):
-    import seed
+    import seed, re, os
     tokenizer = 'toke_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.pkl'
     jsondict = {'sequences': ['no_data']*82, 'model':None, 'loss': ['no_data']*82}
     for filename in os.listdir(filepath):
