@@ -67,7 +67,7 @@ def modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_pat
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     # define the checkpoint
-    filepath=f"{results_path.rstrip('/')}/wi_{{epoch:02d}}_{{loss:.4f}}_{modelName}.hdf5"
+    filepath=f"{results_path.rstrip('/').lstrip('/')}/wi_{{epoch:02d}}_{{loss:.4f}}_{modelName}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
     callbacks_list = [checkpoint]
 
@@ -76,24 +76,26 @@ def modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_pat
     return history_callback
 
 
-# In[5]:
+# In[12]:
 
 
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
 # -- Write Files ---- ---- ---- --- ---- --- --- --- -- 
 #--- --- ---- --- ---- --- ---- ---- --- ----- ---- ---
-def writeFiles(modelName, history_callback, modelList, seq_length, total_sequences, epochs, batch_size, results_path):
-    loss_history = history_callback.history
-    loss_history['seq_length'] = seq_length
-    loss_history['total_sequences'] = total_sequences
-    loss_history['batch_size'] = batch_size
-    loss_history['epochs'] = epochs
+def writeFiles(modelName, modelList, seq_length, total_sequences, epochs, batch_size, results_path):
+    model_info = {} #history_callback.history
+    model_info['seq_length'] = seq_length
+    model_info['total_sequences'] = total_sequences
+    model_info['batch_size'] = batch_size
+    model_info['epochs'] = epochs
     
     # save losses
-    with open(results_path.rstrip('/') + '/info_' + modelName + '.txt', 'w+') as f:
+    rFile = results_path.rstrip('/').lstrip('/') + '/info_' + modelName + '.txt'
+    print(f'Info File: {rFile}')
+    with open(rFile,'w+') as f:
         f.write(str(modelList))
         f.write('\n')
-        f.write(str(loss_history))
+        f.write(str(model_info))
 
 
 # In[6]:
@@ -178,7 +180,7 @@ def trainModelComplete(results_path):
     drseuss_text = 'data/combinedText.txt'
     seed_length = 50
     length = seed_length + 1
-    epochs = 50
+    epochs = 3
     batch_size = 128
     #-- ---- ---- --- ---- ----- ---- ----- ---- ----- ----- ---- ---- ---- ----
     
@@ -227,11 +229,14 @@ def trainModelComplete(results_path):
     #-- Create Model -- --- --- --- ---- --- -- ---- --- --- --- --- --- --- ---- --- ---
     model, modelName = defineModel(vocab_size, seq_length, modelList, length, input_shape)
     #-- save the tokenizer --- --- --- ---- --- --- ---- --
-    dump(tokenizer, open('token_'+modelName+'.pkl', 'wb'))
+    dump(tokenizer, open(results_path.rstrip('/').lstrip('/') + f'/token_'+modelName+'.pkl', 'wb'))
     #-- Save history and final model --- -
-    writeFiles(modelName, history_callback, modelList, seq_length, len(sequences), epochs, batch_size, results_path)
+    writeFiles(modelName, modelList, seq_length, len(sequences), epochs, batch_size, results_path)
     #-- Fit model -- ---- --- --- --- ---- --- --- ---- --- --- --- --- --- --- --- --- 
     history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_path)
+    loss_history = history_callback.history
+    with open(results_path.rstrip('/').lstrip('/') + f'/{modelName}_loss_history.txt') as f:
+        f.write(loss_history)
 
 
 # In[8]:
@@ -310,6 +315,12 @@ if __name__ == '__main__':
 def json_create(filepath = '.'):
     import os, ast, json, re, seed
     datetime = {}
+    #-- Determine JSON file name -- 
+    jsonFile = 'Alldata.json'; i = '0'
+    while os.path.isfile(jsonFile):
+        i = str(int(i)+1)
+        jsonFile = f"Alldata{i}.json"
+        
     for filename in os.listdir(filepath):
         #wi_01_6.7077__2018-10-22_09-29.hdf5
         m = re.search('wi_(..)_(......)__*(....-..-..)_(..-..).hdf5', filename)
@@ -327,6 +338,11 @@ def json_create(filepath = '.'):
                     modelHistory = ast.literal_eval(modelHistory)
                     modelList = ast.literal_eval(modelList)
                     epochs = modelHistory['epochs']
+                    if os.path.isfile(f"{date+'_'+time}_loss_history.txt"):
+                        with open(f"{date+'_'+time}_loss_history.txt") as f:
+                            model_history = f.read()
+                        model_history = ast.literal_eval(model_history)
+                        modelHistory['model_history'] = model_history
                 except:
                     modelList = []
                     modelHistory = {}
@@ -336,15 +352,9 @@ def json_create(filepath = '.'):
                 print(datetime)
             datetime[date+'_'+time]['sequence_list'][int(epoch)] = generate_seq(os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
             print('\n',filename, ": ",datetime[date+'_'+time]['sequence_list'][int(epoch)])
-    #-- Write JSON file of all model training data --- 
-    jsonFile = 'Alldata.json'; i = '0'
-    #-- Determine JSON file name -- 
-    while os.path.isfile(jsonFile):
-        i = str(int(i)+1)
-        jsonFile = f"Alldata{i}.json"
-    #-- Write JSON file -- --- ----
-    with open(jsonFile, 'w+') as fp:
-        json.dump(datetime, fp)
+            #-- Write JSON file -- --- ----
+            with open(jsonFile, 'w+') as fp:
+                json.dump(datetime, fp)
 
 
 # In[ ]:
@@ -352,7 +362,7 @@ def json_create(filepath = '.'):
 
 #wi_76_0.0010__51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.hdf
 def jsonify_the_old_style_file(filepath = '.'):
-    import seed, re, os
+    import seed, re, os, json
     tokenizer = 'toke_51_LSTM_256_True_Dense_256_relu_Dropout_0.2__LSTM_128_True_Dense_128_relu_Dropout_0.2__LSTM_64_False_Dense_64_relu_Flatten___Dense_2830_softmax.pkl'
     jsondict = {'sequences': ['no_data']*112, 'model':None, 'loss': ['no_data']*112}
     for filename in os.listdir(filepath):
