@@ -82,8 +82,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 with open("character_based/info_{now.strftime('%Y-%m-%d_%H-%M')}.txt", 'w+') as f:
     pstr = "{'seq_length': " + str(seq_length) + '}'
-    modelstr = 
-"""
+    modelstr = """
 model = Sequential()
 model.add(LSTM(400, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
 model.add(Dropout(0.2))
