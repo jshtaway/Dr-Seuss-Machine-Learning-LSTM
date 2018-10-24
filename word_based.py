@@ -165,7 +165,7 @@ def defineModel(vocab_size, seq_length, modelList, length, input_shape):
     return model, modelName
 
 
-# In[7]:
+# In[13]:
 
 
 def trainModelComplete(results_path):
@@ -235,7 +235,7 @@ def trainModelComplete(results_path):
     #-- Fit model -- ---- --- --- --- ---- --- --- ---- --- --- --- --- --- --- --- --- 
     history_callback = modelFit(model, modelName, X, y, seq_length, batch_size, epochs, results_path)
     loss_history = history_callback.history
-    with open(results_path.rstrip('/').lstrip('/') + f'/{modelName}_loss_history.txt', 'w+') as f:
+    with open(results_path.rstrip('/').lstrip('/') + f'/loss_history_{modelName}.txt', 'w+') as f:
         f.write(str(loss_history))
 
 
