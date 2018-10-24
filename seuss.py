@@ -68,21 +68,42 @@ y = np_utils.to_categorical(dataY)
 
 
 # In[11]:
-
+import datetime
+now = datetime.datetime.now()
 
 # define the LSTM model
 model = Sequential()
-model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
+model.add(LSTM(400, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(200))
 model.add(Dropout(0.2))
 model.add(Dense(y.shape[1], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
+
+with open("character_based/info_{now.strftime('%Y-%m-%d_%H-%M')}.txt", 'w+') as f:
+    pstr = "{'seq_length': " + str(seq_length) + '}'
+    modelstr = 
+"""
+model = Sequential()
+model.add(LSTM(400, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(200))
+model.add(Dropout(0.2))
+model.add(Dense(y.shape[1], activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+"""
+    f.write(pstr)
+    f.write(modelstr)
+
+
 
 print("model compiled")
 # In[12]:
 
 
 # define the checkpoint
-filepath="weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
+
+filepath=f"character_based/wi-{{epoch:02d}}-{{loss:.4f}}_{now.strftime('%Y-%m-%d_%H-%M')}.h5"
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 callbacks_list = [checkpoint]
 
@@ -90,4 +111,7 @@ callbacks_list = [checkpoint]
 # In[13]:
 
 print("nuke launching")
-model.fit(X, y, epochs=1000, batch_size=128, callbacks=callbacks_list, verbose=1)
+history = model.fit(X, y, epochs=500, batch_size=128, callbacks=callbacks_list, verbose=1)
+loss_history = history.history
+with open("character_based/loss_history_{now.strftime('%Y-%m-%d_%H-%M')}.txt", 'w+') as f:
+    f.write(str(loss_history))
