@@ -347,7 +347,7 @@ def json_create(filepath = '.'):
                         text = f.read()
                     modelList = text.split(']')[0] + ']'
                     modelHistory = '{' + ']'.join(text.split(']')[1:]).split('{')[1]
-                    print(f"NEW DATA: {date+'_'+time}")
+                    #print(f"NEW DATA: {date+'_'+time}")
                     modelHistory = ast.literal_eval(modelHistory)
                     modelList = ast.literal_eval(modelList)
                     epochs = modelHistory['epochs']
@@ -362,8 +362,13 @@ def json_create(filepath = '.'):
                 datetime[date+'_'+time] = {'model_list': modelList,
                                            'model_history': modelHistory,
                                            'sequence_list': ['no_model_data']*(epochs+1)}
-                print(datetime)
-            datetime[date+'_'+time]['sequence_list'][int(epoch)] = generate_seq(os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
+                try:
+                    seq_length = modelHistory['seq_length']
+                except:
+                    seq_length = 50
+                #print(f'{epoch}: {datetime}')
+            #seq_length, seed_text, n_words, filepath = '', modelName = '', tokenizerName = '', )
+            datetime[date+'_'+time]['sequence_list'][int(epoch)] = generate_seq(seq_length, seed.seed_text, 50, filepath, filename, tokenizer) 
             print('\n',filename, ": ",datetime[date+'_'+time]['sequence_list'][int(epoch)])
             #-- Write JSON file -- --- ----
             with open(jsonFile, 'w+') as fp:
@@ -389,7 +394,8 @@ def jsonify_the_old_style_file(filepath = '.'):
             epoch, loss, modellist = m.group(1), m.group(2), m.group(3)
             jsondict['model'] = modellist
             jsondict['loss'][int(epoch)] = float(loss)
-            jsondict['sequences'][int(epoch)] = generate_seq(os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
+            #seq_length, seed_text, n_words, filepath = '', modelName = '', tokenizerName = '', )
+            jsondict['sequences'][int(epoch)] = generate_seq(50, seed.seed_text, 50, os.path.join(filepath,filename), tokenizer, 50, seed.seed_text, 50)
             print(epoch, ': ', jsondict['sequences'][int(epoch)])
             #-- Write JSON file -- --- ----
             with open(jsonFile, 'w+') as fp:
