@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"> 
+<head>
+<script type="text/javascript" src="extras/jquery.min.1.7.js"></script>
+<script type="text/javascript" src="extras/jquery-ui-1.8.20.custom.min.js"></script>
+<script type="text/javascript" src="extras/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="extras/modernizr.2.5.3.min.js"></script>
+<script type="text/javascript" src="lib/hash.js"></script>
+<link rel="stylesheet" type="text/css" href="css/basic.css">
+<script type="text/javascript" src="lib/hash.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+</head>
+<body>
+	<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/index.html">Machine Learning - Dr. Seuss</a>
+				</div>
+				<div id="navbar" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="/chart.html">Model Data</a></li>
+						<li><a href="/seed.html">Input Seed</a></li>
+						<li><a href="/turnjs.html">turn.js</a></li>
+						<li><a href="/my-story.html">My Story</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+    <div class="jumbotron description" >
+        <div class="container" >
+        <h1 class="display-3">Let me tell you a story.</h1>
+        <p>
+            Input Seed.
+        </p>
+        </div>
+	</div>
+
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+	<div class='col-xs-10' style="padding-left: 20%">
+	<form id="theform" class="form-inline my-2 my-lg-0 ">
+		<input id='inputbox' class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="artistName">
+		<button class="btn btn-outline-success my-2 my-sm-0 text-dark" type="button" >Search Artist</button>
+	</form>
+	</div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script>
+	window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+	<script>
+			// var seedFunction = function(){
+			// 	// var text = d3.select()
+			// 	var seed = d3.select('input').property('value')
+			// 	d3.json(`http://localhost:5000/api/${seed}`,function(data) { 
+			// 		data = 'Underneath the poet tree come rest a while with me and watch the way the word web weaves between the shady story leaves. branches of the poet tree reach from the mountains to the sea. So come and sit. and dream. and climb. just dont get hit by falling rhymes'
+			// 		window.location = `http://localhost:3000/my-story.html?seed=${data}`;
+			// 	});
+			// };
+			$('#theform button').click(function(){
+				console.log("gerh");
+				// var text = d3.select()
+				var seed = d3.select('input').property('value')
+				d3.json(`http://localhost:5000/api/${seed}`,function(data) { 
+					window.location = `http://localhost:3000/my-story.html?seed=${data}`;
+				});
+			}
+
+			);
+		</script>    
+
+</body>
