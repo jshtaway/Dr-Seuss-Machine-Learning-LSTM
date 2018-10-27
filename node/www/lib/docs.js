@@ -11,6 +11,9 @@ function loadPage(page) {
 	});
 
 	img.attr('src', 'pages/' +  (page-2) + '.png');
+	// if (page == 4){
+	// 	plot
+	// }
 
 }
 

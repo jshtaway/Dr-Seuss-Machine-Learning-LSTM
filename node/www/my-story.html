@@ -6,7 +6,7 @@
 <script type="text/javascript" src="extras/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="extras/modernizr.2.5.3.min.js"></script>
 <script type="text/javascript" src="lib/hash.js"></script>
-<link rel="stylesheet" type="text/css" href="css/basic.css">
+<link rel="stylesheet" type="text/css" href="css/flipbook.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
 
@@ -14,58 +14,52 @@
 </head>
 <body>
 	<div class='row'>
-	<nav class="navbar navbar-default">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="/index.html">Machine Learning - Dr. Seuss</a>
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/index.html">Machine Learning - Dr. Seuss</a>
+				</div>
+				<div id="navbar" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="/chart.html">Model Data</a></li>
+						<li><a href="/seed.html">Input Seed</a></li>
+						<li><a href="/turnjs.html">turn.js</a></li>
+						<li><a href="/my-story.html">My Story</a></li>
+					</ul>
+				</div>
 			</div>
-			<div id="navbar" class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li><a href="/chart.html">Model Data</a></li>
-					<li><a href="/seed.html">Input Seed</a></li>
-					<li><a href="/turnjs.html">turn.js</a></li>
-					<li><a href="/my-story.html">My Story</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-</div>
-
-	<div id="canvas">
-	
+		</nav>
 	</div>
-	
-	<div class="flipbook-viewport">
+
+	<!-- <div class="flipbook-viewport"> -->
 		<div class="container canvas">
 			<div class="flipbook book-zoom sample-docs">
 				<div class= 'test'>New
-						<img class='' src='https://tse4.mm.bing.net/th?id=OIP.I65LFck-2bns_KdyfgnVuwHaEo&pid=Api' 
-						style="padding: 10%">
+					<img class='' src='https://tse4.mm.bing.net/th?id=OIP.I65LFck-2bns_KdyfgnVuwHaEo&pid=Api' 
+					style="padding: 10%">
 				</div>
-				<div style="padding:20%"><div id="plot"></div></div>
-				<div style="padding:20%">New</div>
-				<div style="padding:20%">New</div>
-				<div style="padding:20%">of</div>
-				<div style="padding:20%">the</div>
-				<div >emergency</div>
-				<div >broadcast</div>
-				<div >system</div>
-				<div >this</div>
-				<div >is</div>
-				<div>only</div>
+				<!-- <div style="padding:20%"><div id="plot"></div></div> -->
+				<div >New</div>
+				<div >New</div>
+				<div >of</div>
+				<div >the</div>
 				<div>a</div>
 				<div>test.</div>
-
+			</div>
+			<div id="slider-bar" class="turnjs-slider">
+					<div id="slider"></div>
+				</div>
 			</div>
 		</div>
-		</div>
-	</div>
+	<!-- </div> -->
+	
+
 	<script>
 		let urlParams = new URLSearchParams(window.location.search);
 		let seed = urlParams.get('seed');
@@ -75,8 +69,9 @@
 	</script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"  ></script>
-	<script type="text/javascript" src="lib/app.js"></script>
 	<script src="lib/plots.js" ></script>
+	<script type="text/javascript" src="lib/app.js"></script>
+	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </body>
 
