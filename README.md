@@ -4,6 +4,11 @@ This project focuses on using LSTM machine learning models to create Dr Seuss li
 
 ![Graph of Model Loss per Epoch](https://github.com/zen-gineer/Dr-Seuss-Machine-Learning-LSTM/blob/master/ModelLoss.PNG)
 
+## Understanding LSTM
+
+![](https://github.com/zen-gineer/Dr-Seuss-Machine-Learning-LSTM/blob/master/node/www/pages/2.png)
+![](https://github.com/zen-gineer/Dr-Seuss-Machine-Learning-LSTM/blob/master/node/www/pages/3.png)
+
 ## Getting Started
 
 word_based.ipnb is our experimentation with word based LSTM models. This has the advantage of outputing only words that it has seen, and will therefore be more readable. However this makes for less training data availability than the character based model. Our character based model can be found in seuss.ipnb or seuss.py 
